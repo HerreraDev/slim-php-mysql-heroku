@@ -9,19 +9,19 @@ require_once "../vendor/autoload.php";
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
  
-class Usuario extends Model { 
+class Producto extends Model { 
     
     use SoftDeletes;
 
-    protected $primaryKey = 'idUsuario';
-    protected $table = 'usuario';
+    protected $primaryKey = 'idProducto';
+    protected $table = 'producto';
     public $incrementing = true;
     public $timestamps = false;
 
-    const DELETED_AT = 'fecha_de_salida';
+    const DELETED_AT = 'fecha_eliminacion';
 
     protected $fillable = [
-        'idUsuario', 'nombre', 'apellido', 'clave', 'mail', 'fecha_de_ingreso', 'empleo', 'ruta_foto', 'fecha_de_salida'
+        'idProducto', 'codigo_de_barra', 'nombre', 'tipo', 'stock', 'precio', 'fecha_de_creacion', 'fecha_de_modificacion', 'ruta_foto'
     ];
 }
 
