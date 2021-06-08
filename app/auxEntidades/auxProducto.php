@@ -117,7 +117,7 @@ class auxProducto{
 
         }
 
-        echo $pdf->Output("productos.pdf","F");
+        echo $pdf->Output("productos.pdf","D");
 
         echo "Pdf de productos generado productos.pdf";
     }

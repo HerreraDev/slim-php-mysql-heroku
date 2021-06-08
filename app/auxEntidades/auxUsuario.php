@@ -165,7 +165,7 @@ class auxUsuario
             $pdf->Cell(40, 10, $user->fecha_de_ingreso, 1, 1, 'C', 0);
         }
 
-        echo $pdf->Output("usuarios.pdf", "F");
+        echo $pdf->Output("usuarios.pdf", "D");
 
         echo "Pdf de usuarios generado en /pdf/usuarios.pdf";
     }

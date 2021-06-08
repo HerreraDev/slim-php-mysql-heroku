@@ -95,7 +95,7 @@ class auxMesa{
 
         }
 
-        echo $pdf->Output("mesas.pdf","F");
+        echo $pdf->Output("mesas.pdf","D");
 
         echo "Pdf de mesas generado productos.pdf";
     }

@@ -212,7 +212,7 @@ class auxPedido
 
         }
 
-        echo $pdf->Output("pedidos.pdf","F");
+        echo $pdf->Output("pedidos.pdf","D");
 
         echo "Pdf de pedidos generado pedidos.pdf";
     }
