@@ -6,10 +6,12 @@ require_once './auxEntidades/auxPedido.php';
 
 include_once "./models/Pedido.php";
 include_once "./models/UserLogs.php";
+include_once "./models/PedidosLogs.php";
 
 
 use App\Models\Pedido as Pedido;
 use App\Models\UserLogs as UserLogs;
+use App\Models\PedidosLogs as PedidosLogs;
 
 class Logs
 {
@@ -53,18 +55,14 @@ class Logs
 
         if ($id_estadoAux != -1 && $id_responsableAux != -1) {
 
-            $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+            $logPedido = new PedidosLogs();
+            $logPedido->id_pedido = $idPedido;
+            $logPedido->id_estado = $id_estadoAux;
+            $logPedido->id_responsable = $id_responsableAux;
+            $logPedido->fecha_hora_log = date("Y-m-d H:i:s");
 
-            $consulta = $objetoAccesoDato->RetornarConsulta("
-				INSERT INTO `pedidosLogs` (`id_pedido`,`id_estado`,`id_responsable`,`fecha_hora_log`) VALUES(:id_pedido,:estado,:idResponsable,:fecha_hora)");
+            $logPedido->save();
 
-            $consulta->bindValue(':id_pedido', $idPedido, PDO::PARAM_INT);
-            $consulta->bindValue(':estado', $id_estadoAux, PDO::PARAM_INT);
-            $consulta->bindValue(':idResponsable', $id_responsableAux, PDO::PARAM_INT);
-            $consulta->bindValue(':fecha_hora', date("Y-m-d H:i:s"), PDO::PARAM_INT);
-
-            $consulta->execute();
-            return $consulta->rowCount();
         }
     }
 }

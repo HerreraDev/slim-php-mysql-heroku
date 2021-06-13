@@ -110,6 +110,8 @@ class PedidoApi implements IApiUsable
 
 
                 $response->getBody()->write("Se inserto el pedido del producto: " . $productos[$i]);
+
+                Logs::LogUsuario($mail_responsable, "Creo pedido");
             }
         }
 
@@ -118,6 +120,9 @@ class PedidoApi implements IApiUsable
         $MesaAct = $auxMesa->find($idMesa);
         $MesaAct->id_estado = 3;
         $MesaAct->save();
+
+
+
 
 
 

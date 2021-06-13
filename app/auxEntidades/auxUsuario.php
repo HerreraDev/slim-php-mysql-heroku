@@ -170,25 +170,7 @@ class auxUsuario
         echo "Pdf de usuarios generado en /pdf/usuarios.pdf";
     }
 
-    //------------------------------------------------------------------//
-    //Listados:
-
-    public static function listadoA(){
-
-        $logs = UserLogs::all()->where('accion',"=", "Login");
-
-        //$arrayDiaHoraLogin = Capsule::table('userLogs')
-
-        return $arrayDiaHoraLogin;
-    }
-
     
-    public static function ticetksGet(){
-
-        $logs = Tickets::all();
-
-        return $logs;
-    }
 
     
 }

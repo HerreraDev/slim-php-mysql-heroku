@@ -9,6 +9,7 @@ require_once './clases/usuarioApi.php';
 require_once './clases/ProductoApi.php';
 require_once './clases/MesaApi.php';
 require_once './clases/PedidoApi.php';
+require_once './clases/ListadosApi.php';
 
 
 require_once './clases autenticacion/MWparaCORS.php';
@@ -170,16 +171,27 @@ $app->group('/pdf', function(){
 
 $app->group('/administracion/empleado', function(){
 
-  $this->get('/a', \auxUsuario::class . ':listadoA');
+  $this->get('/a[/{fecha1}/{fecha2}]', \ListadosApi::class . ':LoginEnSistema');
 
-  $this->get('/b', \auxUsuario::class . ':ticetksGet');
+  $this->get('/b[/{fecha1}/{fecha2}]', \ListadosApi::class . ':cantidadOperaciones');
 
-  $this->get('/c', \auxMesa::class . ':listadoC');
+  $this->get('/c[/{fecha1}/{fecha2}]', \ListadosApi::class . ':cantidadOperacionesPorEmpleado');
 
-  $this->get('/d', \auxPedido::class . ':listadoD');
+  $this->get('/d[/{fecha1}/{fecha2}]', \ListadosApi::class . ':listadoD');
 
 });
 
+$app->group('/administracion/pedido', function(){
+
+  $this->get('/a[/{fecha1}/{fecha2}]', \ListadosApi::class . ':masVendido');
+
+  $this->get('/b[/{fecha1}/{fecha2}]', \ListadosApi::class . ':menosVendido');
+
+  $this->get('/c[/{fecha1}/{fecha2}]', \ListadosApi::class . ':entregadoTarde');
+
+  $this->get('/d[/{fecha1}/{fecha2}]', \ListadosApi::class . ':cancelados');
+
+});
 $app->run();
 
 
