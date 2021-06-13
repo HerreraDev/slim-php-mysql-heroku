@@ -192,6 +192,29 @@ $app->group('/administracion/pedido', function(){
   $this->get('/d[/{fecha1}/{fecha2}]', \ListadosApi::class . ':cancelados');
 
 });
+
+$app->group('/administracion/mesas', function(){
+
+  $this->get('/a[/{fecha1}/{fecha2}]', \ListadosApi::class . ':masUsada');
+
+  $this->get('/b[/{fecha1}/{fecha2}]', \ListadosApi::class . ':menosUsada');
+
+  $this->get('/c[/{fecha1}/{fecha2}]', \ListadosApi::class . ':masFacturo');
+
+  $this->get('/d[/{fecha1}/{fecha2}]', \ListadosApi::class . ':menosFacturo');
+
+  $this->get('/e[/{fecha1}/{fecha2}]', \ListadosApi::class . ':facturaMayorImporte');
+
+  $this->get('/f[/{fecha1}/{fecha2}]', \ListadosApi::class . ':facturaMenorImporte');
+
+  $this->get('/g[/{fecha1}/{fecha2}]', \ListadosApi::class . ':facturoEntreFechas');
+
+  $this->get('/h[/{fecha1}/{fecha2}]', \ListadosApi::class . ':mejoresComentarios');
+
+  $this->get('/i[/{fecha1}/{fecha2}]', \ListadosApi::class . ':peoresComentarios');
+
+});
+
 $app->run();
 
 
