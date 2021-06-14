@@ -78,7 +78,7 @@ class PedidoApi implements IApiUsable
 
             $idProducto = auxProducto::ObtenerIdProductoPorNombre($productos[$i]);
             if ($idProducto == -1) {
-                $response->getBody()->write("ERROR. No existe un producto con el nombre: " . $productos[$i]);
+                $response->getBody()->write("ERROR. No existe un producto con el nombre: " . $productos[$i]. "<br/>");
                 return $response;
             } else {
 
@@ -109,10 +109,13 @@ class PedidoApi implements IApiUsable
 
 
 
-                $response->getBody()->write("Se inserto el pedido del producto: " . $productos[$i]);
+
+                $response->getBody()->write("Se inserto el pedido del producto: " . $productos[$i]. "<br/>");
 
                 Logs::LogUsuario($mail_responsable, "Creo pedido");
             }
+            echo "Codigo del pedido: ".$numero_pedido."<br/>";
+            echo "Numero de mesa: ".$numero_mesa."</br>";
         }
 
         //Actualizo estado de la mesa
