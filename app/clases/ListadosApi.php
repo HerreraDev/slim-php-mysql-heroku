@@ -48,6 +48,14 @@ class ListadosApi
         auxListados::menosVendido($args);
     }
 
+    public function EntregadoTarde($request, $response, $args)
+    {
+        $tardes = auxListados::entregadoTarde($args);
+
+        $newResponse = $response->withJson($tardes, 200);
+        return $newResponse;
+    }
+
     public function Cancelados($request, $response, $args)
     {
         $cancelados = auxListados::cancelados($args);

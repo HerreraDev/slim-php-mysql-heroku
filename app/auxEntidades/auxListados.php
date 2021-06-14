@@ -255,6 +255,43 @@ class auxListados
         echo json_encode($max);
     }
 
+    public static function entregadoTarde($fechas)
+    {
+        switch (count($fechas)) {
+            case 0:
+                $tardes = Capsule::select("SELECT id_pedido, DATE_ADD(pedidos.fecha_hora_de_ingreso, INTERVAL pedidos.tiempo_estimado MINUTE) AS Horario_debio_entregar, fecha_hora_log from pedidosLogs INNER JOIN pedidos ON id_pedido = pedidos.idPedido WHERE pedidosLogs.id_estado = 2");
+                break;
+            case 2:
+                $fecha1 = $fechas['fecha1'];
+                $fecha2 = $fechas['fecha2'];
+
+                $tardes = Capsule::select("SELECT id_pedido, DATE_ADD(pedidos.fecha_hora_de_ingreso, INTERVAL pedidos.tiempo_estimado MINUTE) AS Horario_debio_entregar, fecha_hora_log from pedidosLogs INNER JOIN pedidos ON id_pedido = pedidos.idPedido WHERE pedidosLogs.id_estado = 2 AND fecha_hora_log BETWEEN {$fecha1} AND {$fecha2}");
+
+                break;
+        }
+
+        $debioEntregar = array();
+        $entrego = array();
+        foreach($tardes as $tarde){
+            array_push($debioEntregar,$tarde->Horario_debio_entregar);
+            array_push($entrego,$tarde->fecha_hora_log);
+        }
+
+        echo count($entrego);
+        echo count($debioEntregar);
+
+        $entregasTarde = array();
+
+        for($i=0; $i<count($entrego); $i++){
+            if($debioEntregar[$i] < $entrego[$i]){
+                array_push($entregasTarde, $tardes[$i]);
+            }
+        }
+
+        return $entregasTarde;
+    }
+
+
     public static function cancelados($fechas)
     {
 
