@@ -109,7 +109,7 @@ $app->group('/pedido', function () {
 
   $this->put('/servir', \PedidoApi::class . ':ServirPedidoListo');
        
-})->add(\MWParaAutenticar::class . ':VerificarUsuario')->add(\MWparaCORS::class . ':HabilitarCORS8080');
+})->add(\MWParaAutenticar::class . ':MWPedido')->add(\MWparaCORS::class . ':HabilitarCORS8080');
 
 
 $app->group('/pendientes', function(){
