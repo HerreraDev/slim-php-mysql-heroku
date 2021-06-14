@@ -21,7 +21,7 @@ class Encuesta extends Model {
     const DELETED_AT = 'fecha_eliminacion';
 
     protected $fillable = [
-        'idEncuesta', 'numero_pedido', 'mesa', 'restaurante', 'mozo', 'cocinero', 'experiencia'
+        'idEncuesta', 'numero_pedido', 'mesa', 'restaurante', 'mozo', 'cocinero', 'experiencia', 'fecha_hora_encuesta'
     ];
 }
 

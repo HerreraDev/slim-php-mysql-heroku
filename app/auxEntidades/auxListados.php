@@ -123,6 +123,40 @@ class auxListados
         }
     }
 
+    public static function cantidadOperacionesCadaUno($fechas)
+    {
+
+        $usuarios = Usuario::all();
+
+        $idsUsuarios = array();
+
+        foreach ($usuarios as $user) {
+            if ($user->empleo != "Cliente") {
+                array_push($idsUsuarios, $user->idUsuario);
+            }
+        }
+        switch (count($fechas)) {
+            case 0:
+                for ($i = 0; $i < count($idsUsuarios); $i++) {
+                    $cantOperaciones = Capsule::select("select id_usuario, COUNT(id_usuario) AS Contador_acciones from userLogs GROUP BY id_usuario ORDER BY COUNT(id_usuario) DESC");
+                }
+                break;
+            case 2:
+                $fecha1 = $fechas['fecha1'];
+                $fecha2 = $fechas['fecha2'];
+
+                for ($i = 0; $i < count($idsUsuarios); $i++) {
+                    $cantOperaciones = Capsule::select("select id_usuario, COUNT(id_usuario) AS Contador_acciones from userLogs where hora_accion BETWEEN {$fecha1} AND {$fecha2} GROUP BY id_usuario ORDER BY COUNT(id_usuario) DESC");
+                }
+                break;
+            default:
+                echo "ERROR, solo puede enviar 0 fechas o 2 fechas.";
+                break;
+        }
+
+        return $cantOperaciones;
+    }
+
     //--------------------------------------------------------------//
     //Pedidos:
 
@@ -238,216 +272,221 @@ class auxListados
         }
 
         return $cancelados;
-        
     }
 
     //--------------------------------------------------------------//
     //Mesas:
-    public static function masUsada($fechas){
-        switch(count($fechas)){
+    public static function masUsada($fechas)
+    {
+        switch (count($fechas)) {
             case 0:
                 $masUsada = Capsule::select("select id_mesa, COUNT(id_mesa) AS veces_usada from pedidos GROUP BY id_mesa ORDER BY COUNT(veces_usada) DESC");
                 break;
             case 2;
-            $fecha1 = $fechas['fecha1'];
-            $fecha2 = $fechas['fecha2'];
-                $masUsada= Capsule::select("select id_mesa, COUNT(id_mesa) AS veces_usada from pedidos WHERE fecha_hora_de_ingreso BETWEEN {$fecha1} AND {$fecha2} GROUP BY id_mesa ORDER BY COUNT(id_mesa) DESC");
+                $fecha1 = $fechas['fecha1'];
+                $fecha2 = $fechas['fecha2'];
+                $masUsada = Capsule::select("select id_mesa, COUNT(id_mesa) AS veces_usada from pedidos WHERE fecha_hora_de_ingreso BETWEEN {$fecha1} AND {$fecha2} GROUP BY id_mesa ORDER BY COUNT(id_mesa) DESC");
                 break;
         }
 
         return $masUsada;
     }
 
-    public static function menosUsada($fechas){
-        switch(count($fechas)){
+    public static function menosUsada($fechas)
+    {
+        switch (count($fechas)) {
             case 0:
                 $menosUsada = Capsule::select("select id_mesa, COUNT(id_mesa) AS veces_usada from pedidos GROUP BY id_mesa ORDER BY COUNT(veces_usada) ASC");
                 break;
             case 2;
-            $fecha1 = $fechas['fecha1'];
-            $fecha2 = $fechas['fecha2'];
-                $menosUsada= Capsule::select("select id_mesa, COUNT(id_mesa) AS veces_usada from pedidos WHERE fecha_hora_de_ingreso BETWEEN {$fecha1} AND {$fecha2} GROUP BY id_mesa ORDER BY COUNT(id_mesa) ASC");
+                $fecha1 = $fechas['fecha1'];
+                $fecha2 = $fechas['fecha2'];
+                $menosUsada = Capsule::select("select id_mesa, COUNT(id_mesa) AS veces_usada from pedidos WHERE fecha_hora_de_ingreso BETWEEN {$fecha1} AND {$fecha2} GROUP BY id_mesa ORDER BY COUNT(id_mesa) ASC");
                 break;
         }
 
         return $menosUsada;
     }
 
-    public static function masFacturo($fechas){
-        switch(count($fechas)){
+    public static function masFacturo($fechas)
+    {
+        switch (count($fechas)) {
             case 0:
                 $masFacturo = Capsule::select("select idMesa, SUM(total) AS totalFacturado from tickets GROUP BY idMesa ORDER BY totalFacturado DESC");
                 break;
             case 2;
-            $fecha1 = $fechas['fecha1'];
-            $fecha2 = $fechas['fecha2'];
-                $masFacturo= Capsule::select("select idMesa, SUM(total) AS totalFacturado from tickets WHERE fecha_hora_salida BETWEEN {$fecha1} AND {$fecha2} GROUP BY idMesa ORDER BY totalFacturado DESC");
+                $fecha1 = $fechas['fecha1'];
+                $fecha2 = $fechas['fecha2'];
+                $masFacturo = Capsule::select("select idMesa, SUM(total) AS totalFacturado from tickets WHERE fecha_hora_salida BETWEEN {$fecha1} AND {$fecha2} GROUP BY idMesa ORDER BY totalFacturado DESC");
                 break;
         }
 
         return $masFacturo[0];
     }
 
-    public static function menosFacturo($fechas){
-        switch(count($fechas)){
+    public static function menosFacturo($fechas)
+    {
+        switch (count($fechas)) {
             case 0:
                 $menosFacturo = Capsule::select("select idMesa, SUM(total) AS totalFacturado from tickets GROUP BY idMesa ORDER BY totalFacturado ASC");
                 break;
             case 2;
-            $fecha1 = $fechas['fecha1'];
-            $fecha2 = $fechas['fecha2'];
-                $menosFacturo= Capsule::select("select idMesa, SUM(total) AS totalFacturado from tickets WHERE fecha_hora_salida BETWEEN {$fecha1} AND {$fecha2} GROUP BY idMesa ORDER BY totalFacturado ASC");
+                $fecha1 = $fechas['fecha1'];
+                $fecha2 = $fechas['fecha2'];
+                $menosFacturo = Capsule::select("select idMesa, SUM(total) AS totalFacturado from tickets WHERE fecha_hora_salida BETWEEN {$fecha1} AND {$fecha2} GROUP BY idMesa ORDER BY totalFacturado ASC");
                 break;
         }
 
         return $menosFacturo[0];
     }
 
-    public static function facturaMayorImporte($fechas){
+    public static function facturaMayorImporte($fechas)
+    {
 
         $facturasIguales = array();
 
-        switch(count($fechas)){
+        switch (count($fechas)) {
             case 0:
-                $facturaMayorImporte = Capsule::select("select idMesa, SUM(total) AS totalFacturado from tickets GROUP BY idMesa ORDER BY totalFacturado ASC");
+                $facturaMayorImporte = Capsule::select("select idMesa, SUM(total) AS totalFacturado from tickets GROUP BY idMesa ORDER BY totalFacturado DESC");
                 break;
             case 2;
-            $fecha1 = $fechas['fecha1'];
-            $fecha2 = $fechas['fecha2'];
-                $facturaMayorImporte= Capsule::select("select idMesa, SUM(total) AS totalFacturado from tickets WHERE fecha_hora_salida BETWEEN {$fecha1} AND {$fecha2} GROUP BY idMesa ORDER BY totalFacturado ASC");
+                $fecha1 = $fechas['fecha1'];
+                $fecha2 = $fechas['fecha2'];
+                $facturaMayorImporte = Capsule::select("select idMesa, SUM(total) AS totalFacturado from tickets WHERE fecha_hora_salida BETWEEN {$fecha1} AND {$fecha2} GROUP BY idMesa ORDER BY totalFacturado DESC");
                 break;
         }
 
 
         $valores = array();
-        foreach($facturaMayorImporte as $fact){
-            array_push($valores,$fact->totalFacturado);
+        foreach ($facturaMayorImporte as $fact) {
+            array_push($valores, $fact->totalFacturado);
         }
 
         $maximo = max($valores);
-
-        for($i=0; $i<count($facturaMayorImporte);$i++){
-            if($facturaMayorImporte[$i]->totalFacturado != $maximo){  
-                unset($facturaMayorImporte[$i]); 
+        
+        for ($i = 0; $i < count($facturaMayorImporte); $i++) {
+            if ($facturaMayorImporte[$i]->totalFacturado != $maximo) {
+                unset($facturaMayorImporte[$i]);
             }
         }
         return $facturaMayorImporte;
     }
 
-    public static function facturaMenorImporte($fechas){
+    public static function facturaMenorImporte($fechas)
+    {
 
         $facturasIguales = array();
 
-        switch(count($fechas)){
+        switch (count($fechas)) {
             case 0:
                 $facturaMenorImporte = Capsule::select("select idMesa, SUM(total) AS totalFacturado from tickets GROUP BY idMesa ORDER BY totalFacturado ASC");
                 break;
             case 2;
-            $fecha1 = $fechas['fecha1'];
-            $fecha2 = $fechas['fecha2'];
-                $facturaMenorImporte= Capsule::select("select idMesa, SUM(total) AS totalFacturado from tickets WHERE fecha_hora_salida BETWEEN {$fecha1} AND {$fecha2} GROUP BY idMesa ORDER BY totalFacturado ASC");
+                $fecha1 = $fechas['fecha1'];
+                $fecha2 = $fechas['fecha2'];
+                $facturaMenorImporte = Capsule::select("select idMesa, SUM(total) AS totalFacturado from tickets WHERE fecha_hora_salida BETWEEN {$fecha1} AND {$fecha2} GROUP BY idMesa ORDER BY totalFacturado ASC");
                 break;
         }
 
 
         $valores = array();
-        foreach($facturaMenorImporte as $fact){
-            array_push($valores,$fact->totalFacturado);
+        foreach ($facturaMenorImporte as $fact) {
+            array_push($valores, $fact->totalFacturado);
         }
 
         $maximo = min($valores);
 
-        for($i=0; $i<count($facturaMenorImporte);$i++){
-            if($facturaMenorImporte[$i]->totalFacturado != $maximo){  
-                unset($facturaMenorImporte[$i]); 
+        for ($i = 0; $i < count($facturaMenorImporte); $i++) {
+            if ($facturaMenorImporte[$i]->totalFacturado != $maximo) {
+                unset($facturaMenorImporte[$i]);
             }
         }
         return $facturaMenorImporte;
     }
 
-    public static function facturoEntreFechas($fechas){
-        switch(count($fechas)){
+    public static function facturoEntreFechas($fechas)
+    {
+        switch (count($fechas)) {
             case 0:
                 echo "ERROR. Debe ingresar dos fechas";
                 break;
             case 2;
-            $fecha1 = $fechas['fecha1'];
-            $fecha2 = $fechas['fecha2'];
-                $facturaEntreFechas= Capsule::select("select idMesa, SUM(total) AS totalFacturado from tickets WHERE fecha_hora_salida BETWEEN {$fecha1} AND {$fecha2} GROUP BY idMesa");
+                $fecha1 = $fechas['fecha1'];
+                $fecha2 = $fechas['fecha2'];
+                $facturaEntreFechas = Capsule::select("select idMesa, SUM(total) AS totalFacturado from tickets WHERE fecha_hora_salida BETWEEN {$fecha1} AND {$fecha2} GROUP BY idMesa");
                 break;
         }
 
         return $facturaEntreFechas;
     }
 
-    public static function mejoresComentarios($fechas){
+    public static function mejoresComentarios($fechas)
+    {
 
         $facturasIguales = array();
 
-        switch(count($fechas)){
+        switch (count($fechas)) {
             case 0:
                 $puntuacionMesa = Capsule::select("SELECT encuesta.numero_pedido, encuesta.mesa AS Puntuacion, pedidos.id_mesa FROM `encuesta` INNER JOIN pedidos ON encuesta.numero_pedido = pedidos.numero_pedido");
                 break;
             case 2;
-            $fecha1 = $fechas['fecha1'];
-            $fecha2 = $fechas['fecha2'];
-                $puntuacionMesa= Capsule::select("SELECT encuesta.numero_pedido, encuesta.mesa AS Puntuacion, pedidos.id_mesa FROM `encuesta` INNER JOIN pedidos ON encuesta.numero_pedido = pedidos.numero_pedido WHERE fecha_hora_encuesta BETWEEN {$fecha1} AND {$fecha2}");
+                $fecha1 = $fechas['fecha1'];
+                $fecha2 = $fechas['fecha2'];
+                $puntuacionMesa = Capsule::select("SELECT encuesta.numero_pedido, encuesta.mesa AS Puntuacion, pedidos.id_mesa FROM `encuesta` INNER JOIN pedidos ON encuesta.numero_pedido = pedidos.numero_pedido WHERE fecha_hora_encuesta BETWEEN {$fecha1} AND {$fecha2}");
                 break;
         }
 
 
         $valores = array();
-        foreach($puntuacionMesa as $fact){
-            array_push($valores,$fact->Puntuacion);
+        foreach ($puntuacionMesa as $fact) {
+            array_push($valores, $fact->Puntuacion);
         }
 
         $maximo = max($valores);
 
-        for($i=0; $i<count($puntuacionMesa);$i++){
-            if($puntuacionMesa[$i]->Puntuacion != $maximo){  
-                unset($puntuacionMesa[$i]); 
+        for ($i = 0; $i < count($puntuacionMesa); $i++) {
+            if ($puntuacionMesa[$i]->Puntuacion != $maximo) {
+                unset($puntuacionMesa[$i]);
             }
         }
         return $puntuacionMesa;
     }
 
-    public static function peoresComentarios($fechas){
+    public static function peoresComentarios($fechas)
+    {
 
         $facturasIguales = array();
 
-        switch(count($fechas)){
+        switch (count($fechas)) {
             case 0:
                 $puntuacionMesa = Capsule::select("SELECT encuesta.numero_pedido, encuesta.mesa AS Puntuacion, pedidos.id_mesa FROM `encuesta` INNER JOIN pedidos ON encuesta.numero_pedido = pedidos.numero_pedido");
                 break;
             case 2;
-            $fecha1 = $fechas['fecha1'];
-            $fecha2 = $fechas['fecha2'];
-                $puntuacionMesa= Capsule::select("SELECT encuesta.numero_pedido, encuesta.mesa AS Puntuacion, pedidos.id_mesa FROM `encuesta` INNER JOIN pedidos ON encuesta.numero_pedido = pedidos.numero_pedido WHERE fecha_hora_encuesta BETWEEN {$fecha1} AND {$fecha2}");
+                $fecha1 = $fechas['fecha1'];
+                $fecha2 = $fechas['fecha2'];
+                $puntuacionMesa = Capsule::select("SELECT encuesta.numero_pedido, encuesta.mesa AS Puntuacion, pedidos.id_mesa FROM `encuesta` INNER JOIN pedidos ON encuesta.numero_pedido = pedidos.numero_pedido WHERE fecha_hora_encuesta BETWEEN {$fecha1} AND {$fecha2}");
                 break;
         }
 
 
         $valores = array();
-        foreach($puntuacionMesa as $fact){
-            array_push($valores,$fact->Puntuacion);
+        foreach ($puntuacionMesa as $fact) {
+            array_push($valores, $fact->Puntuacion);
         }
-        
+
 
         $numeros = array();
-        foreach($puntuacionMesa as $fact){
-            array_push($numeros,$fact->numero_pedido);
+        foreach ($puntuacionMesa as $fact) {
+            array_push($numeros, $fact->numero_pedido);
         }
 
         $minimo = min($valores);
 
-        for($i=0; $i<count($puntuacionMesa);$i++){
-            if($puntuacionMesa[$i]->Puntuacion != $minimo && $puntuacionMesa[$i]->numero_pedido == $numeros[$i]){  
-                unset($puntuacionMesa[$i]); 
+        for ($i = 0; $i < count($puntuacionMesa); $i++) {
+            if ($puntuacionMesa[$i]->Puntuacion != $minimo && $puntuacionMesa[$i]->numero_pedido == $numeros[$i]) {
+                unset($puntuacionMesa[$i]);
             }
         }
-        return $puntuacionMesa;
+        return $puntuacionMesa[0];
     }
-
-
-
 }

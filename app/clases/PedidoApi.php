@@ -317,6 +317,7 @@ class PedidoApi implements IApiUsable
         $encuesta->mozo = $mozo;
         $encuesta->cocinero = $cocinero;
         $encuesta->experiencia = $experiencia;
+        $encuesta->fecha_hora_encuesta = date("Y-m-d H:i:s");
         //$encuesta->fecha_eliminacion = NULL;
         $encuesta->save();
 

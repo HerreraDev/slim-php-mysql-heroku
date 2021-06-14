@@ -177,9 +177,9 @@ $app->group('/administracion/empleado', function(){
 
   $this->get('/c[/{fecha1}/{fecha2}]', \ListadosApi::class . ':cantidadOperacionesPorEmpleado');
 
-  $this->get('/d[/{fecha1}/{fecha2}]', \ListadosApi::class . ':listadoD');
+  $this->get('/d[/{fecha1}/{fecha2}]', \ListadosApi::class . ':cantidadOperacionesCadaUno');
 
-});
+})->add(\MWParaAutenticar::class . ':EsAdmin')->add(\MWparaCORS::class . ':HabilitarCORS8080');
 
 $app->group('/administracion/pedido', function(){
 
@@ -191,7 +191,7 @@ $app->group('/administracion/pedido', function(){
 
   $this->get('/d[/{fecha1}/{fecha2}]', \ListadosApi::class . ':cancelados');
 
-});
+})->add(\MWParaAutenticar::class . ':EsAdmin')->add(\MWparaCORS::class . ':HabilitarCORS8080');;
 
 $app->group('/administracion/mesas', function(){
 
@@ -213,7 +213,7 @@ $app->group('/administracion/mesas', function(){
 
   $this->get('/i[/{fecha1}/{fecha2}]', \ListadosApi::class . ':peoresComentarios');
 
-});
+})->add(\MWParaAutenticar::class . ':EsAdmin')->add(\MWparaCORS::class . ':HabilitarCORS8080');;
 
 $app->run();
 
