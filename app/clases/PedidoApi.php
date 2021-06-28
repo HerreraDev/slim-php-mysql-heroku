@@ -48,7 +48,6 @@ class PedidoApi implements IApiUsable
         $ArrayDeParametros = $request->getParsedBody();
         //var_dump($ArrayDeParametros);
 
-        $miPedido = new Pedido();
 
         $numero_pedido = auxPedido::AlfanumericoRandom(5);
         $mailCliente = $ArrayDeParametros['mailCliente'];
@@ -75,6 +74,7 @@ class PedidoApi implements IApiUsable
         $productos = explode("/", $nombre_producto);
         $cantidades = explode("/", $cantidad);
         for ($i = 0; $i < count($productos); $i++) {
+            $miPedido = new Pedido();
 
             $idProducto = auxProducto::ObtenerIdProductoPorNombre($productos[$i]);
             if ($idProducto == -1) {
@@ -90,7 +90,7 @@ class PedidoApi implements IApiUsable
                 }
 
 
-
+                
 
                 $miPedido->numero_pedido = $numero_pedido;
                 $miPedido->id_usuario = $idCliente;
@@ -107,7 +107,7 @@ class PedidoApi implements IApiUsable
 
                 $miPedido->save();
 
-
+                var_dump($miPedido);
 
 
                 $response->getBody()->write("Se inserto el pedido del producto: " . $productos[$i] . "<br/>");
@@ -127,32 +127,6 @@ class PedidoApi implements IApiUsable
         //logueo mesa
         //$idResponsable - $mesaAct
         Logs::logMesa($idResponsable, $MesaAct);
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /*
-        $archivos = $request->getUploadedFiles();
-        $destino="./fotos/Pedidos/";
-        //var_dump($archivos);
-        //var_dump($archivos['foto']);
-
-        $nombreAnterior=$archivos['foto']->getClientFilename();
-        $extension= explode(".", $nombreAnterior)  ;
-        //var_dump($nombreAnterior);
-        $extension=array_reverse($extension);
-
-        $archivos['foto']->moveTo($destino.$nombre.".".$extension[0]);
-        */
 
         return $response;
     }
