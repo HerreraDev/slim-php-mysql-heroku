@@ -107,7 +107,7 @@ class PedidoApi implements IApiUsable
 
                 $miPedido->save();
 
-                var_dump($miPedido);
+                
 
 
                 $response->getBody()->write("Se inserto el pedido del producto: " . $productos[$i] . "<br/>");
