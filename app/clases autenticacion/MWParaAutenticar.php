@@ -166,6 +166,47 @@ class MWParaAutenticar
 
     return $response;
   }
+
+  public function MWSocio($request, $response, $next)
+  {
+    $objDelaRespuesta = new stdclass();
+    $objDelaRespuesta->respuesta = "";
+
+    if ($request->isGet()) {
+      $header = $request->getHeaderLine('Authorization');
+      $token = trim(explode("Bearer", $header)[1]);
+
+
+      try {
+        AutentificadorJWT::verificarToken($token);
+        $objDelaRespuesta->esValido = true;
+      } catch (Exception $e) {
+        //guardar en un log
+        $objDelaRespuesta->excepcion = $e->getMessage();
+        $objDelaRespuesta->esValido = false;
+      }
+
+
+      if ($objDelaRespuesta->esValido) {
+        $payload = AutentificadorJWT::ObtenerData($token);
+
+        if ($payload->empleo == "Socio") {
+          $response = $next($request, $response);
+        } else {
+          $objDelaRespuesta->respuesta = "ERROR. Solo socios puede alterar la base de datos de productos.";
+        }
+      } else {
+        $objDelaRespuesta->respuesta = "Usuario no registrado";
+      }
+
+      if ($objDelaRespuesta->respuesta != "") {
+        $nueva = $response->withJson($objDelaRespuesta, 401);
+        return $nueva;
+      }
+    } 
+
+    return $response;
+  }
 }
 
     

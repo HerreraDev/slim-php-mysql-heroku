@@ -78,7 +78,7 @@ class PedidoApi implements IApiUsable
 
             $idProducto = auxProducto::ObtenerIdProductoPorNombre($productos[$i]);
             if ($idProducto == -1) {
-                $response->getBody()->write("ERROR. No existe un producto con el nombre: " . $productos[$i]. "<br/>");
+                $response->getBody()->write("ERROR. No existe un producto con el nombre: " . $productos[$i] . "<br/>");
                 return $response;
             } else {
 
@@ -110,12 +110,12 @@ class PedidoApi implements IApiUsable
 
 
 
-                $response->getBody()->write("Se inserto el pedido del producto: " . $productos[$i]. "<br/>");
+                $response->getBody()->write("Se inserto el pedido del producto: " . $productos[$i] . "<br/>");
 
                 Logs::LogUsuario($mail_responsable, "Creo pedido");
             }
-            echo "Codigo del pedido: ".$numero_pedido."<br/>";
-            echo "Numero de mesa: ".$numero_mesa."</br>";
+            echo "Codigo del pedido: " . $numero_pedido . "<br/>";
+            echo "Numero de mesa: " . $numero_mesa . "</br>";
         }
 
         //Actualizo estado de la mesa
@@ -124,6 +124,9 @@ class PedidoApi implements IApiUsable
         $MesaAct->id_estado = 3;
         $MesaAct->save();
 
+        //logueo mesa
+        //$idResponsable - $mesaAct
+        Logs::logMesa($idResponsable, $MesaAct);
 
 
 
@@ -311,6 +314,7 @@ class PedidoApi implements IApiUsable
         $mozo = $ArrayDeParametros["mozo"];
         $cocinero = $ArrayDeParametros["cocinero"];
         $experiencia = $ArrayDeParametros["experiencia"];
+        $mail_responsable = $ArrayDeParametros["mail_del_mozo"];
 
         $encuesta = new Encuesta();
 
@@ -330,6 +334,17 @@ class PedidoApi implements IApiUsable
         $MesaAct = $auxMesa->find($auxPedido->id_mesa);
         $MesaAct->id_estado = 0;
         $MesaAct->save();
+
+        $idResponsable = auxUsuario::ObtenerIdPorMail($mail_responsable);
+        if ($idResponsable == -1) {
+            $response->getBody()->write("ERROR. No existe un usuario con ese mail.");
+            return $response;
+        }
+
+        //logueo mesa
+        //$idResponsable - $mesaAct
+        Logs::logMesa($idResponsable, $MesaAct);
+
 
         echo "Gracias, encuesta guardada.";
     }

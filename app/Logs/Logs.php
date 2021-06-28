@@ -7,11 +7,13 @@ require_once './auxEntidades/auxPedido.php';
 include_once "./models/Pedido.php";
 include_once "./models/UserLogs.php";
 include_once "./models/PedidosLogs.php";
+include_once "./models/MesasLogs.php";
 
 
 use App\Models\Pedido as Pedido;
 use App\Models\UserLogs as UserLogs;
 use App\Models\PedidosLogs as PedidosLogs;
+use App\Models\MesasLogs as MesasLogs;
 
 class Logs
 {
@@ -62,6 +64,22 @@ class Logs
             $logPedido->fecha_hora_log = date("Y-m-d H:i:s");
 
             $logPedido->save();
+
+        }
+    }
+
+    public static function logMesa($idResponsable, $mesa)
+    {
+
+        if ($mesa != null && $idResponsable != -1) {
+
+            $mesaLog = new MesasLogs();
+            $mesaLog->id_mesa = $mesa->idMesa;
+            $mesaLog->id_responsable = $idResponsable;
+            $mesaLog->id_estado = $mesa->id_estado;
+            $mesaLog->fecha_hora_log = date("Y-m-d H:i:s");
+
+            $mesaLog->save();
 
         }
     }

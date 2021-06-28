@@ -11,6 +11,7 @@ require_once './models/Ticket.php';
 
 use App\Models\Pedido as Pedido;
 use App\Models\Mesa as Mesa;
+use App\Models\PedidosLogs;
 use App\Models\Ticket as Ticket;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -93,6 +94,11 @@ class auxPedido
         $MesaAct->id_estado = 4;
         $MesaAct->save();
 
+        //logueo mesa
+        //$idResponsable - $mesaAct
+        Logs::logMesa($idResponsable, $MesaAct);
+
+
 
         return $consulta;
     }
@@ -158,6 +164,13 @@ class auxPedido
             $MesaAct = $auxMesa->find($ticket->idMesa);
             $MesaAct->id_estado = 5;
             $MesaAct->save();
+
+            //logueo mesa
+            //$idResponsable - $mesaAct
+            $auxLog = Capsule::select("SELECT * from pedidosLogs WHERE id_pedido = {$idPedido} and id_estado = 1");
+
+
+            Logs::logMesa($auxLog[0]->id_responsable, $MesaAct);
 
             return 1;
         } else {
